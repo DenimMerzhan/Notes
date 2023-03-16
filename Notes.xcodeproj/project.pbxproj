@@ -15,6 +15,7 @@
 		CF74E40729C2F09B0089F656 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF74E40629C2F09B0089F656 /* Assets.xcassets */; };
 		CF74E40A29C2F09B0089F656 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF74E40829C2F09B0089F656 /* LaunchScreen.storyboard */; };
 		CF74E41429C2F3A10089F656 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF74E41329C2F3A10089F656 /* NotesViewController.swift */; };
+		CFDE917C29C3489C00BE7813 /* SecondNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFDE917B29C3489C00BE7813 /* SecondNotesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		CF74E40929C2F09B0089F656 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF74E40B29C2F09B0089F656 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF74E41329C2F3A10089F656 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
+		CFDE917B29C3489C00BE7813 /* SecondNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondNotesViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				CF74E41329C2F3A10089F656 /* NotesViewController.swift */,
+				CFDE917B29C3489C00BE7813 /* SecondNotesViewController.swift */,
 				CF74E3FE29C2F0990089F656 /* NotebookViewController.swift */,
 			);
 			path = Controller;
@@ -160,6 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFDE917C29C3489C00BE7813 /* SecondNotesViewController.swift in Sources */,
 				CF74E3FF29C2F0990089F656 /* NotebookViewController.swift in Sources */,
 				CF74E3FB29C2F0990089F656 /* AppDelegate.swift in Sources */,
 				CF74E3FD29C2F0990089F656 /* SceneDelegate.swift in Sources */,
@@ -319,6 +323,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -347,6 +352,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
