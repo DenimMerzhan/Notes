@@ -48,7 +48,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="yZb-xW-ZtA">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NotesCell" id="yZb-xW-ZtA">
                                 <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yZb-xW-ZtA" id="7bA-ti-Wnq">
@@ -63,7 +63,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Notes" id="KDK-zu-4PU">
-                        <barButtonItem key="rightBarButtonItem" title="Add" id="RGg-xT-GGp"/>
+                        <barButtonItem key="rightBarButtonItem" title="Add" id="RGg-xT-GGp">
+                            <connections>
+                                <action selector="addButtonPressed:" destination="zpc-9O-Toe" id="9An-6Q-rRn"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="goToText" id="QgT-8f-ixU"/>
