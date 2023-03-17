@@ -8,18 +8,64 @@
 import UIKit
 import CoreData
 
-class SecondNotesViewController: UITableViewController {
+class SecondNotesViewController: UITableViewController, SecondCategory {
     
+    var secondCategory: String?
+    var changeCategory = ""
+    var index: Int?
     var category = String()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var notesArray = [SecondNotes]()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    func giveSeconCategory(secCategory: String, index: Int?) {
+        if secCategory != "" {
+            changeCategory = secCategory
+        }
+        self.index = index
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
         
+        loadData()
+        
+        if changeCategory != "" {
+            
+            if index != nil {
+                context.delete(notesArray[index!])
+                notesArray.remove(at: index!)
+                saveData()
+            }
+            
+            print(changeCategory)
+            let item = SecondNotes(context: context)
+            item.title = changeCategory
+            item.category = category
+            notesArray.append(item)
+            saveData()
+            changeCategory = ""
+        }
+        
+        else if index != nil {
+            
+            if index != nil {
+                context.delete(notesArray[index!])
+                notesArray.remove(at: index!)
+                saveData()
+            }
+        }
     }
     
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+
+    
     @IBAction func addButtonPressed(_ sender: Any) {
+        secondCategory = nil
+        index = nil
+        performSegue(withIdentifier: "goToText", sender: self)
     }
     
 }
@@ -40,16 +86,23 @@ class SecondNotesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        category = notesArray[indexPath.row].title!
-        performSegue(withIdentifier: "goToNotes", sender: self)
+        secondCategory = notesArray[indexPath.row].title!
+        category = notesArray[indexPath.row].category!
+        index = indexPath.row
+        performSegue(withIdentifier: "goToText", sender: self)
 
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
         
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            
             let destantionVC = segue.destination as! NotebookViewController
             destantionVC.category = category
+            destantionVC.secondCategory = secondCategory
+            destantionVC.index = index
+            print(index ?? "nil")
+            destantionVC.delegate = self
             
         }
 
@@ -72,7 +125,11 @@ extension SecondNotesViewController {
     }
     
     func loadData() {
+        
         let request = NSFetchRequest<SecondNotes>(entityName: "SecondNotes")
+        let predicate = NSPredicate(format: "category == %@", category)
+        request.predicate = predicate
+        
         do {
            notesArray =  try context.fetch(request)
         }catch{

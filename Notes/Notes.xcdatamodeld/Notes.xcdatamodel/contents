@@ -5,6 +5,7 @@
     </entity>
     <entity name="NotesText" representedClassName=".NotesText" syncable="YES" codeGenerationType="class">
         <attribute name="category" attributeType="String"/>
+        <attribute name="secondCategory" optional="YES" attributeType="String"/>
         <attribute name="text" attributeType="String"/>
     </entity>
     <entity name="SecondNotes" representedClassName=".SecondNotes" syncable="YES" codeGenerationType="class">
