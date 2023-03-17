@@ -8,6 +8,6 @@
 import Foundation
 
 protocol SecondCategory: class {
-    func giveSeconCategory(secCategory: String, index: Int?)
+    func giveSeconCategory(secCategory: String, subTitle: String, index: Int?, changes: Bool)
 }
 

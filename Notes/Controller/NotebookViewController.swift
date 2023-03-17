@@ -11,45 +11,54 @@ import CoreData
 class NotebookViewController: UIViewController {
     
     weak var delegate: SecondCategory?
-    var category = String()
-    var secondCategory: String?
-    var index: Int?
+    var mainSubtitle: String?
+    var category = String() /// Первичная категория по которой мы фильтруем заметки и текст внутри заметок
+    var secondCategory: String? /// Вторая категория фильтрации
+    
+    let convertString = ConvertString()
+    var index: Int? /// Индекс выбраной строки из SecondVC
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var userText: UITextView!
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        let navigationBar = self.navigationController?.navigationBar
+        navigationBar?.barStyle = .black
+        navigationBar?.backgroundColor = .white
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(category)
-        
-        if secondCategory != nil{
+        if secondCategory != nil{ /// Если это не новая заметка то фильтруем данные для отображения текста в текущей заметке
             loadData()
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         
-        if userText.text != "" || userText.text != nil {
-            
-            let changeCategory =  creatSecondCategory(userText: userText.text!)
-            print(secondCategory ?? "nil")
-            print(changeCategory)
+        if userText.text != "" && userText.text != nil {
+            let changeCategory =  convertString.creatSecondCategory(userText: userText.text!) /// Берем только первые три или меньше слова из всего текста для заголовка
+            let subTitle = convertString.createSubtitle(userText: userText.text!)
             let notesItem = NotesText(context: context)
             
-            if secondCategory != changeCategory {
-                delegate?.giveSeconCategory(secCategory: changeCategory, index: index)
+            if secondCategory != changeCategory || subTitle != mainSubtitle { /// Если текущий заголовок заметки отличается от нового то передаем текущий заголовок и индекс для удаления старой заметки
+                delegate?.giveSeconCategory(secCategory: changeCategory, subTitle: subTitle, index: index, changes: true)
                 notesItem.secondCategory = changeCategory
-            }else{
-                delegate?.giveSeconCategory(secCategory: "",index: nil)
+            }else {
+                delegate?.giveSeconCategory(secCategory: "", subTitle: "", index: nil, changes: false)
                 notesItem.secondCategory = secondCategory
-                
             }
-            notesItem.text = userText.text!
-            notesItem.category = category
+            
+            notesItem.text = userText.text! /// Добавляем текст в заметку
+            notesItem.category = category /// Устанавливаем главную категорию папок заметок
             saveData()
         }
-        else if index != nil {
-            delegate?.giveSeconCategory(secCategory: "", index: index)
+        
+        else if index != nil { /// Если текст поля пуст или nill и это существующая заметка то передаем ее индекс для удаления
+            print(index ?? "nillos")
+            print("fuck")
+            delegate?.giveSeconCategory(secCategory: "", subTitle: "", index: index, changes: false)
         }
     }
 
@@ -71,16 +80,16 @@ extension NotebookViewController {
     func loadData() {
         
 
-        let request = NSFetchRequest<NotesText>(entityName: "NotesText") /// мы приравниваем request ко всем элементам Notes в сущности Notes
-        let predicate = NSPredicate(format: "category == %@", category)
-        let secondPredicate = NSPredicate(format: "secondCategory == %@", secondCategory!)
+        let request = NSFetchRequest<NotesText>(entityName: "NotesText") /// ищем все элементы NotesText
+        let predicate = NSPredicate(format: "category == %@", category) /// Добавляем первую категории для фильтра
+        let secondPredicate = NSPredicate(format: "secondCategory == %@", secondCategory!) ///  Добавляем вторую категорию
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate,secondPredicate])
         request.predicate = compoundPredicate
         
         do{
-            let arr =  try context.fetch(request)
+            let arr =  try context.fetch(request) /// Получаем массив со строками в котором каждый раз если строка изменилась и пользователь вышел с заметки то она сохраняется как новая
             
-            if arr.count > 1 {
+            if arr.count > 1 { /// Если элементов строк больше 1 то мы удаляем все кроме последнего элемента что бы не заполнять память
                 userText.text = arr[arr.count - 1].text
                 context.delete(arr[0])
                 saveData()
@@ -93,43 +102,5 @@ extension NotebookViewController {
         }
     }
 }
-
-//MARK: - Функци создание заголовка
-
-extension NotebookViewController {
-    
-    func creatSecondCategory(userText:String) -> String {
-        
-        if userText == "" {return ""}
-        var text = userText.map {String($0)}
-        var arr = ""
-        var count = 0
-        
-        for i in 0...text.count - 1 {
-            if text[i] == " " && i == 0 {
-                text.removeFirst()
-                break
-            }else if text[i] == " "{
-                count = count + 1
-                if count < 3 {arr = arr + " "}
-            }
-            else{
-                arr = arr + text[i]
-            }
-            
-            if count == 3 {break}
-        }
-        
-        if count == 3 {
-            return arr + "..."
-        }else{
-            return arr
-        }
-    }
-    
-}
-
-
-
 
 

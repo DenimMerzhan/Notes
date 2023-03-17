@@ -10,6 +10,7 @@
     </entity>
     <entity name="SecondNotes" representedClassName=".SecondNotes" syncable="YES" codeGenerationType="class">
         <attribute name="category" attributeType="String"/>
+        <attribute name="subTitile" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
 </model>

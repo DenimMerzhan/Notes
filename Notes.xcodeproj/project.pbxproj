@@ -15,6 +15,7 @@
 		CF74E40729C2F09B0089F656 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF74E40629C2F09B0089F656 /* Assets.xcassets */; };
 		CF74E40A29C2F09B0089F656 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF74E40829C2F09B0089F656 /* LaunchScreen.storyboard */; };
 		CF74E41429C2F3A10089F656 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF74E41329C2F3A10089F656 /* NotesViewController.swift */; };
+		CFD3CB9929C48ED700F9A992 /* ConvertString.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD3CB9829C48ED700F9A992 /* ConvertString.swift */; };
 		CFDE917C29C3489C00BE7813 /* SecondNotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFDE917B29C3489C00BE7813 /* SecondNotesViewController.swift */; };
 		CFDE917E29C34FF700BE7813 /* SecondCategoryswifttegory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFDE917D29C34FF700BE7813 /* SecondCategoryswifttegory.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +31,7 @@
 		CF74E40929C2F09B0089F656 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF74E40B29C2F09B0089F656 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF74E41329C2F3A10089F656 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
+		CFD3CB9829C48ED700F9A992 /* ConvertString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertString.swift; sourceTree = "<group>"; };
 		CFDE917B29C3489C00BE7813 /* SecondNotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondNotesViewController.swift; sourceTree = "<group>"; };
 		CFDE917D29C34FF700BE7813 /* SecondCategoryswifttegory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondCategoryswifttegory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,9 +66,9 @@
 		CF74E3F929C2F0990089F656 /* Notes */ = {
 			isa = PBXGroup;
 			children = (
-				CFDE917F29C3503200BE7813 /* Model */,
 				CF74E3FA29C2F0990089F656 /* AppDelegate.swift */,
 				CF74E3FC29C2F0990089F656 /* SceneDelegate.swift */,
+				CFDE917F29C3503200BE7813 /* Model */,
 				CF74E41129C2F36E0089F656 /* Controller */,
 				CF74E41229C2F37F0089F656 /* View */,
 				CF74E40629C2F09B0089F656 /* Assets.xcassets */,
@@ -99,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				CFDE917D29C34FF700BE7813 /* SecondCategoryswifttegory.swift */,
+				CFD3CB9829C48ED700F9A992 /* ConvertString.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				CFDE917E29C34FF700BE7813 /* SecondCategoryswifttegory.swift in Sources */,
 				CF74E3FD29C2F0990089F656 /* SceneDelegate.swift in Sources */,
 				CF74E41429C2F3A10089F656 /* NotesViewController.swift in Sources */,
+				CFD3CB9929C48ED700F9A992 /* ConvertString.swift in Sources */,
 				CF74E40529C2F0990089F656 /* Notes.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
