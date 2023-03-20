@@ -10,6 +10,8 @@ import RealmSwift
 
 class Category: Object {
    @objc dynamic var name: String = "Нет категорий"
+   @objc dynamic var subTitle: String?
     
-    let notes = List<Notes>
+    let notes = List<Notes>()
+    var parentCategory = LinkingObjects(fromType: FolderNotes.self, property: "Category")
 }

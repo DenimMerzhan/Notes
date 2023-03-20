@@ -9,5 +9,7 @@ import Foundation
 import RealmSwift
 
 class Notes: Object {
+    @objc dynamic var text: String = ""
     
+    var parentCategory = LinkingObjects(fromType: Category.self, property: "notes")
 }

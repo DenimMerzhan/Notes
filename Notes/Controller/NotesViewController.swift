@@ -6,13 +6,12 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class NotesViewController: UITableViewController {
     
-    var category = "" /// Первичная категория по которой мы фильтруем заметки
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var notesArray = [NotesCategory]()
+    var folderArray: Results<FolderNotes>?
+    let realm = try! Realm()
     
     override func viewWillAppear(_ animated: Bool) { /// Устанавливаем Navigation bar под нужные параметры и цвет
         
@@ -40,10 +39,10 @@ class NotesViewController: UITableViewController {
             
             if textField.text != "" {
                 
-                let notesItem = NotesCategory(context: self.context)  /// Создаем переменную класса NotesCategory
-                notesItem.title = textField.text! /// Присваиваем значение заголовка
-                self.notesArray.append(notesItem) /// Добавляем в массив
-                self.saveData() /// Сохраняем контекст
+
+                let newFolder = FolderNotes()
+                newFolder.name = textField.text!
+                self.saveData(item: newFolder)
             }
         }
         
@@ -60,17 +59,17 @@ class NotesViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return notesArray.count
+        return folderArray?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryNotesCell", for: indexPath) /// Подключаемся к нашей ячейке в Main
-        cell.textLabel?.text = notesArray[indexPath.row].title /// Указываем текст ячейки
+        cell.textLabel?.text = folderArray?[indexPath.row].name ?? "Нет папок" /// Указываем текст ячейки
+        cell.detailTextLabel?.text = folderArray?[indexPath.row].count ?? "0"
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { /// Если пользователь выбрал ячейку
-        category = notesArray[indexPath.row].title!
         performSegue(withIdentifier: "goToNotes", sender: self)
 
         tableView.deselectRow(at: indexPath, animated: true)
@@ -78,7 +77,9 @@ class NotesViewController: UITableViewController {
         
         override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             let destantionVC = segue.destination as! SecondNotesViewController
-            destantionVC.category = category /// Передаем главную категорию по которой отображаем заметки
+            if let index = tableView.indexPathForSelectedRow {
+                destantionVC.folder =  folderArray![index.row]
+            }
             
         }
 
@@ -90,9 +91,12 @@ class NotesViewController: UITableViewController {
 
 extension NotesViewController {
     
-    func saveData(){
+    func saveData(item: FolderNotes){
+        
         do {
-            try context.save()
+            try realm.write({
+                realm.add(item)
+            })
         }catch{
             print("Ошибка сохранения данных - \(error)")
         }
@@ -101,12 +105,9 @@ extension NotesViewController {
     }
     
     func loadData() {
-        let request = NSFetchRequest<NotesCategory>(entityName: "NotesCategory")
-        do {
-           notesArray =  try context.fetch(request)
-        }catch{
-            print("Ошибка чтения данных - \(error)")
-        }
+        
+        folderArray = realm.objects(FolderNotes.self) /// Все объекты Folders
+        
         tableView.reloadData()
     }
     

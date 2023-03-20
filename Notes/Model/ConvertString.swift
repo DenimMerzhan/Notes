@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import RealmSwift
 
 
 struct ConvertString {
     
-    func creatSecondCategory(userText:String) -> String { /// Убираем все кроме 3 или меньше слов в тексте для заголовка
+    func creatTitle(userText:String) -> String { /// Убираем все кроме 3 или меньше слов в тексте для заголовка
         
         if userText == "" {return ""}
         var text = userText.map {String($0)}
@@ -43,7 +44,7 @@ struct ConvertString {
     
 
 
-func createSubtitle(userText: String) -> String {
+func createSubtitle(userText: String) -> String? {
     
     if userText == "" {return ""}
     
@@ -65,7 +66,7 @@ func createSubtitle(userText: String) -> String {
     }
     
     if findProbel(text: newText){
-        return ""
+        return nil
     }else{
         return newText
     }
@@ -82,6 +83,7 @@ func findProbel(text: String) -> Bool {
     }
     return true
 }
+    
     
 }
 
