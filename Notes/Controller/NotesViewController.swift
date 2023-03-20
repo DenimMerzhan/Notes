@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 class NotesViewController: UITableViewController {
     
@@ -20,11 +21,12 @@ class NotesViewController: UITableViewController {
         navigationBar?.backgroundColor = UIColor(named: "NotesBackgound")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewDidAppear(_ animated: Bool) {
+        
         loadData() /// Загружаем данные
         
     }
+    
     
     @IBAction func addPressed(_ sender: UIBarButtonItem) {  /// Создаем оповещение
         
@@ -63,9 +65,10 @@ class NotesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryNotesCell", for: indexPath) /// Подключаемся к нашей ячейке в Main
+        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryNotesCell", for: indexPath) as! SwipeTableViewCell
         cell.textLabel?.text = folderArray?[indexPath.row].name ?? "Нет папок" /// Указываем текст ячейки
         cell.detailTextLabel?.text = folderArray?[indexPath.row].count ?? "0"
+        cell.delegate = self
         return cell
     }
     
@@ -110,6 +113,51 @@ extension NotesViewController {
         
         tableView.reloadData()
     }
+    
+}
+
+
+//MARK: - Работа со свайпами
+
+extension NotesViewController : SwipeTableViewCellDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
+        
+        guard orientation == .right else { return nil }
+
+           let deleteAction = SwipeAction(style: .destructive, title: "delete") { action, indexPath in
+               
+               if let deleteFolder = self.folderArray?[indexPath.row] {
+                   
+                   let categoryArr = deleteFolder.Category.sorted(byKeyPath: "name")
+                   
+                   try! self.realm.write {
+                       for i in categoryArr {
+                           self.realm.delete(i.notes) /// Удаляем заметки в каждой категории
+                       }
+                       
+                       self.realm.delete(deleteFolder.Category) /// Удаляем категорию
+                       self.realm.delete(deleteFolder) /// Удаляем папку
+                   }
+               }
+               
+           }
+
+
+           deleteAction.image = UIImage(named: "delete")
+
+           return [deleteAction]
+        
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        options.transitionStyle = .border
+        return options
+    }
+
+    
     
 }
 

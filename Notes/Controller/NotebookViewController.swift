@@ -47,29 +47,29 @@ class NotebookViewController: UIViewController {
 
                 
                 do{
-                    print("ooooh")
                     
                     try realm.write {
                         
-                        let newCategory = Category()
-                        newCategory.name = title
+                        let newCategory = Category() /// Создаем новую категорию
+                        newCategory.name = title /// устанвливаем ей название
                         if subTitle != nil {
                             newCategory.subTitle = subTitle!
                         }
                         currentFolder.Category.append(newCategory)
-                        if category != nil {
-                            realm.delete(notesArr![0])
-                            realm.delete(category!)}
+                        if category != nil { /// Если категория уже сущестовала
+                            realm.delete(notesArr![0]) /// Удаляем текст заметки в категории
+                            realm.delete(category!)} /// Удаляем категорию
                         
-                        let newNotes = Notes()
+                        let newNotes = Notes() /// Создаем новую заметку
                         newNotes.text = userText.text ?? "nil"
-                        newCategory.notes.append(newNotes)
+                        newCategory.notes.append(newNotes) /// Добавляем ее к новой категории
                         
                     }
                 }
                 
                 catch{print("Ошибка добавления заметки - \(error)")}
             }
+        
     }
         
 }
