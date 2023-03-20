@@ -6,18 +6,22 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class NotebookViewController: UIViewController {
     
     weak var delegate: SecondCategory?
-    var mainSubtitle: String?
-    var category = String() /// Первичная категория по которой мы фильтруем заметки и текст внутри заметок
-    var secondCategory: String? /// Вторая категория фильтрации
+    var folder: FolderNotes?
+    var notesArr: Results<Notes>?
+    var text = ""
+    var category : Category? {
+        didSet {
+            text = loadData()
+        }
+    }
+    let realm = try! Realm()
     
     let convertString = ConvertString()
-    var index: Int? /// Индекс выбраной строки из SecondVC
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var userText: UITextView!
     
     
@@ -30,38 +34,44 @@ class NotebookViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if secondCategory != nil{ /// Если это не новая заметка то фильтруем данные для отображения текста в текущей заметке
-            loadData()
-        }
+        userText.text = text
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         
-        if userText.text != "" && userText.text != nil {
-            let changeCategory =  convertString.creatSecondCategory(userText: userText.text!) /// Берем только первые три или меньше слова из всего текста для заголовка
-            let subTitle = convertString.createSubtitle(userText: userText.text!)
-            let notesItem = NotesText(context: context)
-            
-            if secondCategory != changeCategory || subTitle != mainSubtitle { /// Если текущий заголовок заметки отличается от нового то передаем текущий заголовок и индекс для удаления старой заметки
-                delegate?.giveSeconCategory(secCategory: changeCategory, subTitle: subTitle, index: index, changes: true)
-                notesItem.secondCategory = changeCategory
-            }else {
-                delegate?.giveSeconCategory(secCategory: "", subTitle: "", index: nil, changes: false)
-                notesItem.secondCategory = secondCategory
-            }
-            
-            notesItem.text = userText.text! /// Добавляем текст в заметку
-            notesItem.category = category /// Устанавливаем главную категорию папок заметок
-            saveData()
-        }
+        let title =  convertString.creatTitle(userText: userText.text!)
+        let subTitle = convertString.createSubtitle(userText: userText.text!)
         
-        else if index != nil { /// Если текст поля пуст или nill и это существующая заметка то передаем ее индекс для удаления
-            print(index ?? "nillos")
-            print("fuck")
-            delegate?.giveSeconCategory(secCategory: "", subTitle: "", index: index, changes: false)
-        }
-    }
+        if let currentFolder = folder {
+            
 
+                
+                do{
+                    print("ooooh")
+                    
+                    try realm.write {
+                        
+                        let newCategory = Category()
+                        newCategory.name = title
+                        if subTitle != nil {
+                            newCategory.subTitle = subTitle!
+                        }
+                        currentFolder.Category.append(newCategory)
+                        if category != nil {
+                            realm.delete(notesArr![0])
+                            realm.delete(category!)}
+                        
+                        let newNotes = Notes()
+                        newNotes.text = userText.text ?? "nil"
+                        newCategory.notes.append(newNotes)
+                        
+                    }
+                }
+                
+                catch{print("Ошибка добавления заметки - \(error)")}
+            }
+    }
+        
 }
 
 
@@ -69,38 +79,12 @@ class NotebookViewController: UIViewController {
 
 extension NotebookViewController {
     
-    func saveData(){
-        do{
-            try context.save()
-        }catch{
-            print("Ошибка сохранения данных - \(error)")
-        }
+    func loadData() -> String {
+        notesArr = category?.notes.sorted(byKeyPath: "text")
+        
+        return notesArr![0].text
     }
     
-    func loadData() {
-        
-
-        let request = NSFetchRequest<NotesText>(entityName: "NotesText") /// ищем все элементы NotesText
-        let predicate = NSPredicate(format: "category == %@", category) /// Добавляем первую категории для фильтра
-        let secondPredicate = NSPredicate(format: "secondCategory == %@", secondCategory!) ///  Добавляем вторую категорию
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate,secondPredicate])
-        request.predicate = compoundPredicate
-        
-        do{
-            let arr =  try context.fetch(request) /// Получаем массив со строками в котором каждый раз если строка изменилась и пользователь вышел с заметки то она сохраняется как новая
-            
-            if arr.count > 1 { /// Если элементов строк больше 1 то мы удаляем все кроме последнего элемента что бы не заполнять память
-                userText.text = arr[arr.count - 1].text
-                context.delete(arr[0])
-                saveData()
-            }else if arr.count != 0 {
-                userText.text = arr[arr.count - 1].text
-            }
-            
-        }catch{
-            print("Ошибка загрузки данных - \(error)")
-        }
-    }
 }
 
 
